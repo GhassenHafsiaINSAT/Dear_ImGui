@@ -10,3 +10,14 @@
 - `glfwCreateWindow()`: Creates a window and openGL context
 
 - `ImGuiIO& io = ImGui::GetIO();`: Retrieves the ImGui IO structure, which is used to configure the library.
+
+### Rendering Loop 
+
+- `glfwPollEvents()`: It processes all pending events (keyboard and mouse input, window resize) and calls the corresponding callbacks
+
+- `glClearColor()`: It specifys the color for the background, it clears the color buffer
+
+- `glClear(GL_COLOR_BUFFER_BIT)`: When called, it clear the screen using the color defined by `glClearColor()`
+
+
+

@@ -36,23 +36,19 @@ int main(){
         glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // feed inputs to dear imgui, start new frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // rendering our geometries
         triangle_shader.use();
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
-        // render your GUI
         ImGui::Begin("Demo window");
         ImGui::Button("Hello!");
         ImGui::End();
 
-        // Render dear imgui into screen
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -61,6 +57,7 @@ int main(){
         glViewport(0, 0, display_w, display_h);
         glfwSwapBuffers(window);
     }
+    
 // cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
