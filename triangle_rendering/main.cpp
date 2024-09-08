@@ -1,6 +1,7 @@
 #include "thirdParty/imgui/imgui.h"
 #include "thirdParty/imgui/backends/imgui_impl_glfw.h"
 #include "thirdParty/imgui/backends/imgui_impl_opengl3.h"
+#include <glad/glad.h> 
 #include <GLFW/glfw3.h> // Include OpenGL and GLFW
 
 
