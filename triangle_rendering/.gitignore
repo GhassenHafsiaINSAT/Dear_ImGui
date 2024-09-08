@@ -7,6 +7,7 @@ tap-testdir*/
 
 # keep these
 !**/.gitignore
+!/*.cpp
 !/.commitlintrc.js
 !/.eslintrc.js
 !/.eslintrc.local.*
