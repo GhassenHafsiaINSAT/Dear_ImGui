@@ -8,7 +8,7 @@ add_library(glad glad.c)
 target_include_directories(glad PUBLIC include)
 
 # Add your executable
-add_executable(OpenGL_Project main.cpp)
+add_executable(maxAttr main.cpp)
 
 # Link GLAD and OpenGL to your executable
-target_link_libraries(OpenGL_Project glad GL dl)
+target_link_libraries(maxAttr glad GL dl)

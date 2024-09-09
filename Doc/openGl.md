@@ -25,6 +25,7 @@
 
 ## Shaders 
 - Shaders are little programs that rest on the GPU, run on for each specefic section of the graphics pipline.  
+- Vertex shader transforms vertex positions and other attributes (color, texture) from model space to screen space.  
 - Shaders are programs transforming inputs to outputs, isolated in that they're not allowed to communicate with each other
 
 ### GLSL (OpenGL Shading language)
@@ -51,3 +52,21 @@ void main()
 ```
 
 - Each input variable is also known as a vertex attribute, there is a maximum number of vertex attribute allowed to declare limited by hardware 
+
+### Types 
+
+#### Vectors
+
+- A vector is a 2,3 or 4 component container for any of the basic types (integers, float, boolean... ) 
+
+  - vecn: the default vector of n floats.
+  - bvecn: a vector of n booleans.
+  - ivecn: a vector of n integers.
+  - uvecn: a vector of n unsigned integers.
+  - dvecn: a vector of n double components.
+
+- You can use .x, .y, .z and .w to access their first, second, third and fourth component respectively. 
+
+### Ins and Outs
+- The vertex shader needs input data to do its job, this data comes from vertex attributes like positions, colors, normals, etc
+

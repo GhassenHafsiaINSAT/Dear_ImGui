@@ -1,0 +1,15 @@
+# This file is automatically added by @ghassenhafsia. Do not edit.
+
+# ignore these
+*.js
+*.json
+/build/*
+/MaxVertexAttributes/build/*
+/thirdParty/*
+.vscode
+
+# transient test directories
+
+# keep these
+
+
