@@ -20,4 +20,34 @@
 3. **ImGui** 
   -  Build your GUI using ImGui functions `imgui.h`.  
   -  Handle input and events from GLFW, pass them to imgui to update the gui state, using the `imgui_impl_glfw.h`.  
-  -  Render the GUI using ImGui's OpenGL rendring commands using `imgui_impl_opengl3`.   
+  -  Render the GUI using ImGui's OpenGL rendring commands using `imgui_impl_opengl3`.  
+
+
+## Shaders 
+- Shaders are little programs that rest on the GPU, run on for each specefic section of the graphics pipline.  
+- Shaders are programs transforming inputs to outputs, isolated in that they're not allowed to communicate with each other
+
+### GLSL (OpenGL Shading language)
+
+- Shaders are written in the C-like language GLSL.
+- Shaders always begin with a version declaration, followed by a list of input and output variables, uniform and its `main` function.  
+
+```c
+#version version_number
+in type in_variable_name;
+in type in_variable_name;
+
+out type out_variable_name;
+  
+uniform type uniform_name;
+  
+void main()
+{
+  // process input(s) and do some weird graphics stuff
+  ...
+  // output processed stuff to output variable
+  out_variable_name = weird_stuff_we_processed;
+}
+```
+
+- Each input variable is also known as a vertex attribute, there is a maximum number of vertex attribute allowed to declare limited by hardware 
