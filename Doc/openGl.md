@@ -38,3 +38,68 @@
 - The output of **primitive assembly** is then passed to the **resterization stage**, where it maps the reselting primitives to the corresponding pixels on the final screen.  
 
 - The **fragment shader** is to calculate the final color of a pixel.  
+
+### Vertex input 
+- To start drawing, we have to first give OpenGL some input vertex data.  
+- OpenGL is a 3D graphics library so all coordinates that we specify in OpenGL are in 3D
+- OpenGL only processes 3D coordinates when they are in specific range between -1.0 and 1.0 on all 3 axes (x,y and z), called **normalized device coordinates**.  
+
+- So firstly, you want to send vertex data (positions of your shape) to the GPU, so it can be processed by the vertex shader
+
+#### Vertex buffer Object (VBO): 
+- A block of memory on the GPU where you can store vertex data.  
+- The main advantage of VBO is that you can send many vertex data at once to the GPU and sotre it there, avoiding the slow process of constantly sending data one by one.  
+
+- First, you create a VBO and get a unique ID to refer to it: 
+
+  ```c
+  unsigned int VBO;
+  glGenBuffers(1, &VBO);
+  ```
+
+- Then, you bind the VBO so that OpenGL knows you are working with it:  
+
+  ```c
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);  
+  ```
+
+- Once the VBO is bound, you copy you vertex data into the VBO's memoy, you tell OpenGL how large you data is, and how it should manage it: 
+
+  ```c 
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  ```
+
+### Vertex Shader 
+- Vertex Shader is a small program that runs on the GPU, responsible for processing each vertex and passing the result to the next stages of the rendering pipeline.  
+- We have to write the vertex shader and compile the shader so we can use it in our application: 
+
+    ```c
+    #version 330 core // specefies GLSL version (330 corresponds to OpenGL version 3.3)
+    layout (location = 0) in vec3 aPos; // input of the vertex shader 
+
+    void main()
+    {
+        gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    }
+    ```
+
+- We take then the source code for the vertex shader and store it in a const C string: 
+    ```c
+    const char *vertexShaderSource = "#version 330 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+        "}\0";
+    ```
+- In order for OpenGL to use the shader it has dynammically compile it at run-time from its source code, so we have to create a shader object, referenced by an ID: 
+    ```c 
+    unsigned int vertexShader;
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    ```
+
+- Then, we attach source code to the shader object and compile the shader: 
+    ```c
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+    ```

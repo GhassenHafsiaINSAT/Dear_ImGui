@@ -39,3 +39,24 @@ void main()
 ### Ins and Outs
 - The vertex shader needs input data to do its job, this data comes from vertex attributes like positions, colors, normals, etc
 
+### vertex buffer objects 
+- To send the vertex data to vertex shader, we have to create memory on the GPU where we store vertex data, configure how OpenGL should interpret the memory and specify how to send the data to the graphic card.  
+
+- First, you create a VBO and get a unique ID to refer to it: 
+
+  ```c
+  unsigned int VBO;
+  glGenBuffers(1, &VBO);
+  ```
+
+- Then, you bind the VBO so that OpenGL knows you are working with it:  
+
+  ```c
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);  
+  ```
+
+- Once the VBO is bound, you copy you vertex data into the VBO's memoy, you tell OpenGL how large you data is, and how it should manage it: 
+
+  ```c 
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  ```
