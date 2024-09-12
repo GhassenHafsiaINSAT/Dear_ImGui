@@ -1,22 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
-project(MyFirstProgram)
+project(RenderingTriangle)
 
-# Set OpenGL preference to GLVND
-cmake_policy(SET CMP0072 NEW)
+# Set the policy to prefer GLVND
+if(POLICY CMP0072)
+  cmake_policy(SET CMP0072 NEW)
+endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdParty/imgui,
-                    ${CMAKE_CURRENT_SOURCE_DIR}/thirdParty/imgui/backends)
+find_package(glfw3 REQUIRED)
+find_package(OpenGL REQUIRED)
+set(OpenGL_GL_PREFERENCE GLVND)
 
-add_executable(${PROJECT_NAME}  ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-                                thirdParty/imgui/backends/imgui_impl_glfw.cpp 
-                                thirdParty/imgui/backends/imgui_impl_opengl3.cpp 
-                                thirdParty/imgui/imgui.cpp 
-                                thirdParty/imgui/imgui_draw.cpp 
-                                thirdParty/imgui/imgui_tables.cpp 
-                                thirdParty/imgui/imgui_widgets.cpp
-                )
+add_library(GLAD ${CMAKE_SOURCE_DIR}/glad.c)
+target_include_directories(GLAD PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-                find_package(glfw3 REQUIRED)
-                find_package(OpenGL REQUIRED)
+add_executable(main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
                 
-                target_link_libraries(MyFirstProgram glfw OpenGL::GL)
+target_link_libraries(main PRIVATE glfw GLAD OpenGL::GL dl)

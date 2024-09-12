@@ -1,66 +1,135 @@
-#include "thirdParty/imgui/imgui.h"
-#include "thirdParty/imgui/backends/imgui_impl_glfw.h"
-#include "thirdParty/imgui/backends/imgui_impl_opengl3.h"
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h> // Include OpenGL and GLFW
+#include <iostream>
+#include <glad.h> 
+#include <GLFW/glfw3.h>
+
+
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+     0.0f,  0.5f, 0.0f
+}; 
+
+unsigned int VBO;
+unsigned int VAO;
+unsigned int vertexShader;
+unsigned int fragmentShader;
+unsigned int shaderProgram; 
+int  success;
+char infoLog[512];
+
+
+const char *vertexShaderSource = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0";
+
+const char *fragmentShaderSource = "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n"; 
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow *window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) // Check if the user pressed the escape button, if not it returns GLFW_RELEASE
+        glfwSetWindowShouldClose(window, true);
+}
 
 
 int main(){
     if(!glfwInit()){
+        std::cout<<"Error while initializing GLFW"<<std::endl; 
         return -1; 
     }
 
-// Create a Windowed Mode Window and Its OpenGL Context
-    GLFWwindow* window = glfwCreateWindow(640,480,"triangle", NULL, NULL); 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 
+
+    GLFWwindow* window = glfwCreateWindow(640,480,"Sarra", NULL, NULL); 
     if (!window){
+        std::cout<<"Error Window object"<<std::endl; 
         glfwTerminate(); 
         return -1; 
     }
-// Make the window's context current
+
     glfwMakeContextCurrent(window); 
-    glfwSwapInterval(1); 
 
-    //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) { /* handle error */ }
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
+{
+    std::cout << "Failed to initialize GLAD" <<std::endl; 
+    return -1; 
+}
 
-// Setup Dear imgui context
-    IMGUI_CHECKVERSION(); 
-    ImGui::CreateContext(); 
-    ImGuiIO& io = ImGui::GetIO();
+glViewport(0, 0, 480, 360); 
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
 
-    ImGui::StyleColorsDark(); 
     while (!glfwWindowShouldClose(window))
-    {
-        glfwPollEvents();
+    {   
         glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glfwSwapBuffers(window); 
+        glfwPollEvents();
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
 
-        triangle_shader.use();
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        glGenBuffers(1, &VBO);  
+        glGenVertexArrays(1, &VAO);  
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);  
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);  
+        vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glCompileShader(vertexShader);
 
-        ImGui::Begin("Demo window");
-        ImGui::Button("Hello!");
-        ImGui::End();
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        if(!success)
+        {
+            glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+            std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+            
+        }
 
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glfwSwapBuffers(window);
-    }
+        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glCompileShader(fragmentShader);
+
+
+
+        glAttachShader(shaderProgram, vertexShader); 
+        glAttachShader(shaderProgram, fragmentShader); 
+        glLinkProgram(shaderProgram); 
+
+        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+        
+        if(!success) 
+        {
+            glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+            std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+
+        }
+        glDeleteShader(vertexShader); 
+        glDeleteShader(fragmentShader); 
+
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
+
+        }
     
-// cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    glfwTerminate(); 
+    return 0; 
 }
