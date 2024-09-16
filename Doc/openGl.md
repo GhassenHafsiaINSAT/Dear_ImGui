@@ -48,7 +48,8 @@
 
 #### Vertex buffer Object (VBO): 
 - A block of memory on the GPU where you can store vertex data.  
-- The main advantage of VBO is that you can send many vertex data at once to the GPU and sotre it there, avoiding the slow process of constantly sending data one by one.  
+
+- The main advantage of VBO is that you can send many vertex data at once to the GPU and sotre it there, avoiding the slow process of constantly sending data one by one from CPU to GPU.  
 
 - First, you create a VBO and get a unique ID to refer to it: 
 
@@ -69,6 +70,23 @@
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   ```
 
+### Vertex Array Object (VAO)
+- VAO stores the state of VBOs and how the vertew data is laid out.  
+
+- Instead of setting the VBO every time before drawing, the VOA remembers how the data is linked, making rendering faster and easier to manage.  
+
+- First, you create a VAO and get a unique ID to refer to it: 
+
+  ```c
+  unsigned int VBO;
+  glGenVertexArrays(1, &VAO); 
+  ```  
+- Then, you bind the VBO so that OpenGL knows you are working with it:  
+  
+  ```c
+  glBindVertexArray(VAO);
+  ```
+  
 ### Vertex Shader 
 - Vertex Shader is a small program that runs on the GPU, responsible for processing each vertex and passing the result to the next stages of the rendering pipeline.  
 - We have to write the vertex shader and compile the shader so we can use it in our application: 
