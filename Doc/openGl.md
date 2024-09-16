@@ -40,8 +40,11 @@
 - The **fragment shader** is to calculate the final color of a pixel.  
 
 ### Vertex input 
+
 - To start drawing, we have to first give OpenGL some input vertex data.  
+
 - OpenGL is a 3D graphics library so all coordinates that we specify in OpenGL are in 3D
+
 - OpenGL only processes 3D coordinates when they are in specific range between -1.0 and 1.0 on all 3 axes (x,y and z), called **normalized device coordinates**.  
 
 - So firstly, you want to send vertex data (positions of your shape) to the GPU, so it can be processed by the vertex shader
@@ -75,6 +78,10 @@
 
 - Instead of setting the VBO every time before drawing, the VOA remembers how the data is linked, making rendering faster and easier to manage.  
 
+- On the CPU side when you create your VAO, you describe each attribute by saying this data in this buffer will be attribute 0, this data next to it will be attribute 1 etc. 
+
+- Note that VAO only stores this information of where's who, the actual vertex data is stored in VBOs.  
+
 - First, you create a VAO and get a unique ID to refer to it: 
 
   ```c
@@ -100,6 +107,7 @@
         gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
     }
     ```
+- In vertex shader, the line with layout and position is just saying "get the attribute 0 and put it in a variable called position 
 
 - We take then the source code for the vertex shader and store it in a const C string: 
     ```c
